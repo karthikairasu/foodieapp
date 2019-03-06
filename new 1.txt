@@ -1,0 +1,158 @@
+<html>
+ <head>
+	 <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+     <title>Dashboard</title>
+	 
+		 <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<link href="https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBuvlkY47uyONcP-J_kYorSlvm0TeHXevM" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+	<style>
+	  .mydiv{
+	   min-height:150px;
+	   min-width:200px;
+	   float:left;
+	   padding:10px 10px 0px 10px;
+	   margin:5px;
+       border-radius:10px;
+	   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	  font-size: 17px;
+	  font-family:Lobster;
+	  }
+	  tr.priority_1 th{{
+  background-color: red;
+  color:white;
+}
+tr.priority_2 th{
+  background-color: blue;
+  color:white;
+}
+tr.priority_3 th{{
+  background-color: green;
+  color:white;
+}
+.priority_4{
+  background-color: orange;
+}
+.priority_5{
+  background-color: yellow;
+}
+.priority_6{
+  background-color: grey;
+}
+	  </style>
+	  <script>
+	      function myfun()
+		  {
+			var a = document.getElementById("status").innerHTML;
+			if(a==1)
+			{
+			 	document.getElementById("status").style.color= "green";
+			}else if(a==2)
+			{
+				document.getElementById("status").style.color= "red";
+			}
+			if(a==3){
+				document.getElementById("status").style.color= "yellow";
+			}
+		  }
+	  </script>
+ </head>
+  
+  <body onload="myfun()">
+      <div class="container-fluid">
+	    <div class="row">
+          <div class="col-sm-8">
+		       <?php
+			   $conn = mysqli_connect("localhost","root","","foodie_dev");
+			   mysqli_set_charset($conn,'utf8');
+			   $sql = "select * from foodie_order where restaurent_id = 1 AND branch_id=1 group by main_order_id";
+			   $res = mysqli_query($conn,$sql);
+			   while($row = mysqli_fetch_object($res))
+			   { 
+				$sql_res = "SELECT * FROM `foodie_order` WHERE `main_order_id` = ".$row->main_order_id." ";
+				$response = mysqli_query($conn,$sql_res);
+				
+				while($row_data = mysqli_fetch_array($response))
+			   { 
+				?> 
+			
+		    <div class="mydiv"> 
+			   
+			<div class="panel panel-primary">
+			  <div class="panel-heading">
+			  <b style="float:left">Order Id:<?php echo $row_data['main_order_id'] ; ?></b>.
+			  <b  style="float:right"></b>
+			  </div>
+			  <div class="panel-body" style="padding:0px">
+			    <table class="table table-hover">
+				  <thead>
+				    <tr>
+					  
+					  <th>Dish</th>
+					  <th>Qty</th>
+					  <th class=""></th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+					<?php if($row_data['main_order_id'] == $row->main_order_id )	{ ?>
+					
+					 <td>
+					  <?php 
+                        echo $row_data['dish_name'];
+						
+					  ?>
+					 </td>
+					 <td>
+					  <?php 
+                      echo  $row_data['dish_count'];
+			   }
+					  ?>
+					 </td>
+				    </tr>
+				  </tbody>
+				</table>
+			  </div>
+			</div>
+				
+			</div>
+			   <?php  }}?>
+            </div>
+		  <div class="col-sm-4" style="border-radius:10px;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);background-color:powderblue">
+             <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Dish</th>
+        <th>New</th>
+        <th>In Prep</th>
+      </tr>
+    </thead>
+    <tbody>
+	
+	   <?php 
+	     $sql2 = " select * from foodie_order where restaurent_id = 1 AND branch_id=1 group by dish_name";
+		 $res2 = mysqli_query($conn,$sql2);
+		while($row2 = mysqli_fetch_object($res2))
+			{ ?>
+         <tr>
+	    
+        <td style="font-size:px"><?php echo"$row2->dish_name"?></td>
+        <td>1</td>
+        <td>3</td>
+      </tr>
+       <?php }?>
+    </tbody>
+  </table>
+		  </div>
+		</div>
+	  </div>
+  </body>
+</html>
